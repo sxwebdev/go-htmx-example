@@ -57,16 +57,18 @@ func New(l logger.ExtendedLogger, cfg *config.Config) *Service {
 	// apply routes
 	s.applyRoutes()
 
-	app.Use("/", filesystem.New(filesystem.Config{
-		Root:       http.FS(frontend.StaticFS),
-		PathPrefix: "dist",
-	}))
+	// app.Use("/", filesystem.New(filesystem.Config{
+	// 	Root:       http.FS(frontend.StaticFS),
+	// 	PathPrefix: "dist",
+	// }))
 
+	// add static files
 	app.Use("/assets", filesystem.New(filesystem.Config{
 		Root:       http.FS(frontend.StaticFS),
 		PathPrefix: "dist/assets",
 	}))
 
+	// render 404 page
 	app.Use("*", func(c *fiber.Ctx) error {
 		c.Locals("title", "Page not found")
 		return renderBase(c, components.NotFound())
