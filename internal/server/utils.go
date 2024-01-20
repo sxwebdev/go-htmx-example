@@ -45,3 +45,11 @@ func getTitle(c *fiber.Ctx) string {
 	}
 	return title
 }
+
+func isHtmxRequest(c *fiber.Ctx) bool {
+	res, ok := c.GetReqHeaders()["Hx-Request"]
+	if !ok || len(res) == 0 || res[0] != "true" {
+		return false
+	}
+	return true
+}

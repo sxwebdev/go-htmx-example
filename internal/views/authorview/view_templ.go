@@ -37,7 +37,7 @@ func ListAuthorsWrap() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1><div id=\"authors-list\" hx-get=\"/authors\" hx-target=\"#authors-list\" hx-swap=\"outerHTML\" hx-trigger=\"load\"></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1><div id=\"authors-list\" hx-get=\"/\" hx-target=\"#authors-list\" hx-swap=\"outerHTML\" hx-trigger=\"load\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
