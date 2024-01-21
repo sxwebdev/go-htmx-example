@@ -1,7 +1,11 @@
 import "./style.css";
-import "htmx.org";
+import htmx from "htmx.org";
 import Alpine from "alpinejs";
-
-// window.Alpine = Alpine;
+import { WebSocketConnect } from "./dev";
 
 Alpine.start();
+
+// enable hmr
+WebSocketConnect();
+
+htmx.config.getCacheBusterParam = true;

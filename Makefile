@@ -1,11 +1,13 @@
 start: gen
 	@go run cmd/app/main.go
 
-build: gen-templ gen-frontend
+build: gen
 	@go build -o ./.build/app -v ./cmd/app
 
 watch:
 	@air -c .air.toml
+
+gen: gen-templ gen-frontend
 
 gen-templ:
 	@templ generate
@@ -15,4 +17,3 @@ gen-frontend:
 
 install-tools:
 	@go install github.com/a-h/templ/cmd/templ@latest
-	

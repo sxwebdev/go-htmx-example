@@ -10,15 +10,9 @@ bin = ".build/app"
 # This log file places in your tmp_dir.
 log = "air_errors.log"
 # Watch these filename extensions.
-include_ext = ["go", "tmpl", "templ", "js", "css", "html"]
+include_ext = ["go", "tmpl", "templ", "js", "ts", "tsx", "svg", "css", "html"]
 # Ignore these filename extensions or directories.
-exclude_dir = [
-    ".tmp",
-    "/sql",
-    "frontend/node_modules",
-    "frontend/src",
-    "frontend/dist",
-]
+exclude_dir = [".tmp", "/sql", "frontend/node_modules", "frontend/dist"]
 exclude_regex = ["internal/views/.+/.+_templ\\.go"]
 # It's not necessary to trigger build each time file changes if it's too frequent.
 delay = 1000 # ms

@@ -51,5 +51,8 @@ func isHtmxRequest(c *fiber.Ctx) bool {
 	if !ok || len(res) == 0 || res[0] != "true" {
 		return false
 	}
+
+	c.Set("Vary", "HX-Request")
+
 	return true
 }

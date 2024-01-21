@@ -2,11 +2,13 @@ package server
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	recoverMiddleware "github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/sxwebdev/go-htmx-example/frontend"
@@ -35,14 +37,43 @@ func New(l logger.ExtendedLogger, cfg *config.Config) *Service {
 
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			// Status code defaults to 500
+			code := fiber.StatusInternalServerError
+
+			// Retrieve the custom status code if it's a *fiber.Error
+			var e *fiber.Error
+			if errors.As(err, &e) {
+				code = e.Code
+			}
+
+			if code == fiber.StatusNotFound {
+				ctx.Locals("title", "Page not found")
+				return renderBase(
+					ctx.Status(fiber.StatusNotFound),
+					components.NotFound(),
+				)
+			}
+
+			ctx.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
+			return ctx.Status(code).SendString(err.Error())
+		},
 	})
 
 	s.fiber = app
+
+	// init dev mode
+	if s.config.EnvCI == "local" {
+		s.dev()
+	}
 
 	// add recover
 	app.Use(recoverMiddleware.New(recoverMiddleware.Config{
 		EnableStackTrace: true,
 	}))
+
+	// add etag
+	app.Use(etag.New())
 
 	// add cors config
 	app.Use(cors.New(cors.Config{
@@ -54,25 +85,14 @@ func New(l logger.ExtendedLogger, cfg *config.Config) *Service {
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
-	// apply routes
-	s.applyRoutes()
-
-	// app.Use("/", filesystem.New(filesystem.Config{
-	// 	Root:       http.FS(frontend.StaticFS),
-	// 	PathPrefix: "dist",
-	// }))
-
 	// add static files
 	app.Use("/assets", filesystem.New(filesystem.Config{
 		Root:       http.FS(frontend.StaticFS),
 		PathPrefix: "dist/assets",
 	}))
 
-	// render 404 page
-	app.Use("*", func(c *fiber.Ctx) error {
-		c.Locals("title", "Page not found")
-		return renderBase(c, components.NotFound())
-	})
+	// apply routes
+	s.applyRoutes()
 
 	return s
 }
