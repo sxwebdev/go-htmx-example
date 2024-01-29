@@ -7,6 +7,9 @@ build: gen
 watch:
 	@air -c .air.toml
 
+fmt:
+	gofumpt -l -w .
+
 gen: gen-templ gen-frontend
 
 gen-templ:
