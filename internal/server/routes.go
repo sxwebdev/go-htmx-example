@@ -12,18 +12,28 @@ func (s *Service) applyRoutes() {
 			authors := []models.Author{
 				{
 					ID:        "1",
-					FirstName: "Alexander",
-					LastName:  "Pushkin",
+					FirstName: "Leo",
+					LastName:  "Tolstoy",
 				},
 				{
 					ID:        "2",
-					FirstName: "Mikhail",
-					LastName:  "Lermontov",
+					FirstName: "Gustave",
+					LastName:  "Flaubert",
 				},
 				{
 					ID:        "3",
-					FirstName: "Lev",
-					LastName:  "Tolstoy",
+					FirstName: "F. Scott",
+					LastName:  "Fitzgerald",
+				},
+				{
+					ID:        "4",
+					FirstName: "William",
+					LastName:  "Shakespeare",
+				},
+				{
+					ID:        "5",
+					FirstName: "Fyodor",
+					LastName:  "Dostoevsky",
 				},
 			}
 			return renderChildren(c, authorview.ListAuthors(authors))
